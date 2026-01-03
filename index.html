@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <title>La Fotosíntesis - Proceso vital</title>
+    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/icono.ico">
+    <style>
+        /* ====== Reset & base ====== */
+        * { box-sizing: border-box; margin:0; padding:0; }
+        :root{
+            --blue:#001DFF;
+            --blue-dark:#04032B; /* Azul oscuro solicitado para títulos */
+            --blue-700:#1a3a5f;
+            --blue-600:#254fba;
+            --orange:#f59e42;
+            --orange-700:#e67e22;
+            --bg-grad-1:#1a3a5f;
+            --bg-grad-2:#0d2340;
+            --white:#ffffff;
+            --green:#2ecc71;
+            --red:#e74c3c;
+            --panel:#E8EAFF;
+        }
+        body{
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--bg-grad-1) 0%, var(--bg-grad-2) 100%);
+            min-height:100vh; display:flex; justify-content:center; align-items:center; color:#333; padding:10px;
+        }
+        .game-container{
+            background:var(--white); border-radius:16px; box-shadow:0 12px 24px rgba(0,0,0,.12);
+            padding:1.2rem; max-width:980px; width:100%; min-height:640px; position:relative; overflow:hidden;
+            display:flex; flex-direction:column;
+        }
+        header{ text-align:center; margin-bottom:.8rem; margin-top:2rem; }
+        h1{ color:var(--blue-dark); font-size:clamp(2rem,5.2vw,3.1rem); font-weight:900; letter-spacing:.5px; }
+        .subtitle{ color:var(--blue-700); font-size:clamp(1rem,3.5vw,1.25rem); margin-top:.25rem; }
+        .highlight-keyword{ color:var(--orange); font-weight:800; }
+
+        /* Buttons */
+        .btn{ color:#fff; border:none; padding:.75rem 1.2rem; border-radius:10px; cursor:pointer; font-weight:800;
+            transition:transform .08s ease, box-shadow .2s ease, background-color .25s ease; min-width:140px; height:48px;
+            display:inline-flex; align-items:center; justify-content:center; font-size: 1rem; }
+        .btn:hover{ transform:translateY(-2px); box-shadow:0 6px 14px rgba(0,0,0,.12); }
+        .btn:active{ transform:translateY(0); }
+        .btn-primary{ background:var(--orange); }
+        .btn-primary:hover{ background:var(--orange-700); color:#fff; }
+        .btn-blue{ background:var(--blue-600); }
+        .btn-blue:hover{ filter:brightness(.9); }
+        .btn-ghost{ background:#e6f2ff; color:var(--blue-700); }
+
+        .screen{ display:none; animation:fadeIn .35s ease; flex-direction: column; flex:1;}
+        .screen.active{ display:flex; }
+        @keyframes fadeIn{ from{opacity:0; transform:translateY(12px);} to{opacity:1; transform:translateY(0);} }
+
+        .game-info{ display:flex; gap:.6rem; align-items:center; justify-content:space-between; margin:.4rem 0 1rem; flex-wrap:wrap; }
+        .timer{ font-weight:900; color:var(--blue-700); font-size:clamp(.95rem,2.3vw,1.15rem); }
+        .progress-bar{ flex:1; height:10px; background:#e6f2ff; border-radius:999px; overflow:hidden; }
+        .progress-fill{ height:100%; width:0%; background:linear-gradient(90deg, var(--orange) 0%, var(--orange-700) 100%); transition:width .3s ease; }
+
+        /* Pantalla Inicio Estética */
+        .start-content{ display:flex; flex-direction:column; justify-content:center; align-items:center; flex:1; gap:1rem; padding:1rem; }
+        .advice-box{ background:var(--panel); border-left:4px solid var(--blue-700); padding:1rem 1.2rem; border-radius:12px;
+            color:var(--blue-700); max-width:760px; text-align:center; font-size:clamp(1rem,3vw,1.15rem); }
+        .start-image{ max-width: 300px; width: 100%; margin: 0 auto; }
+        
+        .mute-btn{ position:absolute; top:.8rem; right:4.5rem; background:var(--orange); color:#fff; border:2px solid #fff; width:38px; height:38px; border-radius:50%; cursor:pointer; font-size:1rem; display:flex; align-items:center; justify-content:center; z-index:20; }
+        .mute-btn:hover{ background:var(--orange-700); }
+
+        /* Pantalla Resumen (Estudio) - Títulos arriba */
+        .theory-box {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 25px 0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+            border-left: 6px solid var(--blue);
+            color: #333;
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+        
+        .theory-item {
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .theory-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        /* Título en renglón superior */
+        .theory-title {
+            color: var(--blue-dark);
+            font-weight: 800;
+            font-size: 1.15rem;
+            margin-bottom: 6px;
+            display: block;
+            width: 100%;
+        }
+
+        /* --- JUEGO 1: COMPLETAR HUECOS --- */
+        .fill-game-container { display: flex; flex-direction: column; gap: 1rem; padding: 10px; }
+        
+        /* Banco de palabras */
+        .word-bank {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            justify-content: center;
+            margin-bottom: 1rem;
+            min-height: 50px;
+            padding: 0.5rem;
+            background: #f0f7ff;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e0;
+        }
+        
+        .draggable-word {
+            background-color: var(--white);
+            border: 1px solid var(--blue-600);
+            color: var(--blue-700);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            cursor: grab;
+            user-select: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            touch-action: none;
+        }
+        .draggable-word:active { cursor: grabbing; transform: scale(1.05); }
+        .draggable-word.hidden { display: none; }
+
+        /* Texto y Huecos */
+        .text-paragraph {
+            font-size: 1.1rem;
+            line-height: 2.2;
+            color: #333;
+            text-align: justify;
+        }
+        
+        .dropzone {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 80px;
+            height: 34px;
+            border: 2px dashed #a0aec0;
+            background-color: #e6fffa;
+            border-radius: 6px;
+            margin: 0 4px;
+            vertical-align: middle;
+            cursor: pointer;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+        .dropzone:hover { border-color: var(--orange); background-color: #fffaf0; }
+        .dropzone.filled { border-style: solid; border-color: var(--blue-600); background-color: var(--white); }
+        .dropzone.correct { border-color: var(--green); background-color: #d1fae5; color: var(--green); font-weight: bold; }
+        .dropzone.incorrect { border-color: var(--red); background-color: #fee2e2; color: var(--red); font-weight: bold; }
+
+        .placed-word {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--blue-700);
+            font-weight: 600;
+        }
+
+        /* --- JUEGO 2: ORDENAR FASES --- */
+        .ordering-container { max-width: 800px; margin: 0 auto; width: 100%; display: flex; flex-direction: column; gap: 1rem; }
+        
+        .phase-card {
+            background: var(--white);
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+        
+        /* Estilo para tarjeta destacada */
+        .phase-card.highlighted {
+            border-color: var(--orange);
+            box-shadow: 0 0 0 3px rgba(245, 158, 66, 0.3);
+            transform: scale(1.01);
+        }
+
+        .phase-card:last-child { border-bottom: 2px solid #e2e8f0; } 
+        .phase-card.correct-order { border-color: var(--green); background-color: #f0fdf4; }
+        .phase-card.wrong-order { border-color: var(--red); background-color: #fef2f2; }
+        
+        .card-text { flex: 1; padding: 0 1rem; font-size: 1rem; color: #2d3748; font-weight: 500; }
+        
+        .arrows-container { display: flex; flex-direction: column; gap: 5px; }
+        .arrow-btn {
+            background-color: var(--orange);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: background-color 0.2s;
+        }
+        .arrow-btn:hover { background-color: var(--orange-700); }
+        .arrow-btn:disabled { background-color: #cbd5e0; cursor: not-allowed; opacity: 0.5; }
+
+        /* --- JUEGO 3: BUSCAR PAREJAS --- */
+        .pairs-container {
+            display: grid;
+            /* SIEMPRE 2 columnas fijas */
+            grid-template-columns: 1fr 1fr; 
+            gap: 1rem;
+            align-items: start;
+        }
+
+        .pair-column { display: flex; flex-direction: column; gap: 0.8rem; }
+        
+        .pair-card {
+            background-color: var(--white);
+            border: 2px solid var(--blue-600);
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--blue-700);
+        }
+        
+        .pair-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(0,0,0,0.1); }
+        .pair-card.selected { background-color: #f59e42; color: white; border-color: #e67e22; transform: scale(1.02); }
+        .pair-card.matched { background-color: var(--green); color: white; border-color: #27ae60; cursor: default; opacity: 0.8; }
+        .pair-card.flash-error { animation: shakeRed 0.3s ease-in-out; }
+        
+        @keyframes shakeRed {
+            0% { background-color: #fff; transform: translateX(0); }
+            20% { background-color: #e74c3c; transform: translateX(-5px); }
+            40% { transform: translateX(5px); }
+            60% { transform: translateX(5px); }
+            80% { transform: translateX(5px); }
+            100% { background-color: #fff; transform: translateX(0); }
+        }
+
+        /* Pantalla Final */
+        .results{ display:flex; flex-direction:column; align-items:center; gap:.6rem; text-align:center; flex:1; justify-content:center;}
+        .final-title{ color:var(--blue-dark); font-weight:900; }
+        .big-score{ font-size:clamp(2.2rem,6vw,3.4rem); color:var(--blue-600); font-weight:900; }
+        .score-title{ font-size:1.0rem; color:var(--blue-700); margin-top:1rem; }
+        .final-time{ color:var(--blue-700); }
+        
+        /* TROFEO */
+        #trophyBox { 
+            display: none; 
+            font-size: clamp(4rem, 10vw, 7rem);
+            margin: .5rem 0;
+            text-align: center;
+            align-self: center;
+            animation: bounce 1s ease infinite;
+            color: var(--orange);
+            line-height: 1; 
+        }
+        
+        @keyframes bounce { 
+            0%,100%{ transform: translateY(0) scale(1); } 
+            50%{ transform: translateY(-15px) scale(1.1); } 
+        }
+        
+        .credit{ color:var(--blue-700); margin-top:1rem; }
+        
+        #finalMsg { font-size: clamp(1.2rem, 4.2vw, 1.8rem); font-weight: 800; color: var(--blue-700); margin-top: 0.6rem; }
+        
+        .school-logo { display: block; width: 160px; max-width: 28%; height: auto; margin-top: 0.8rem; border-radius: 8px; object-fit: contain; }
+        @media (max-width: 899px) { .school-logo { width: 140px; max-width: 160px; } }
+        @media (max-width: 420px) { .school-logo { width: 110px; max-width: 40%; margin-top: 0.6rem; } }
+
+        /* Modal */
+        .modal-overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:none; justify-content:center; align-items:center; z-index:1000; }
+        .modal-content { background:white; padding:2rem; border-radius:15px; width:90%; max-width:400px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,0.3); }
+        .modal-input { width:100%; padding:10px; margin:10px 0; border:2px solid #ddd; border-radius:8px; font-size:1rem; }
+        
+        .confetti{ position:fixed; width:10px; height:10px; border-radius:50%; animation: confetti-fall 3s linear forwards; z-index:999; }
+        @keyframes confetti-fall{ 0%{ transform:translate(0, -20px) rotate(0); opacity:1;} 100%{ transform:translate(var(--tx), var(--ty)) rotate(360deg); opacity:0; } }
+
+        /* --- ESTILOS DEL HALL OF FAME --- */
+        .hall-of-fame {
+            background: var(--panel);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-top: 1.5rem;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        .hall-of-fame-title {
+            color: var(--blue-700);
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-align: center;
+            margin-bottom: 0.8rem;
+        }
+
+        .hall-of-fame-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.9rem;
+        }
+
+        .hall-of-fame-table th {
+            background: var(--blue-600);
+            color: white;
+            padding: 0.5rem;
+            text-align: left;
+        }
+
+        .hall-of-fame-table td {
+            padding: 0.4rem 0.5rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .hall-of-fame-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .hall-of-fame-table tr:nth-child(even) {
+            background-color: rgba(255, 255,255, 0.5);
+        }
+
+        .hall-of-fame-error, .hall-of-fame-loading {
+            padding: 1rem;
+            text-align: center;
+            color: var(--blue-700);
+            font-style: italic;
+        }
+
+        .hall-of-fame-error {
+            color: var(--red);
+        }
+
+        .game-controls { display:flex; gap:10px; justify-content:center; margin-top:1rem; min-height: 48px;}
+        .hidden { display: none !important; }
+
+        @media (min-width:900px){ .board{ grid-template-columns: 360px 1fr; align-items:start; } .panel{ order:1; } .stage{ order:2; } }
+        @media (max-width:899px){
+            header{ margin-top:1.6rem; }
+            .board{ grid-template-columns:1fr; }
+            .panel{ display:flex; flex-direction:row; align-items:center; justify-content:space-between; padding:.6rem; }
+            .word-display-container{ order:0; width:100%; margin-bottom:.6rem; }
+            .stage{ order:1; }
+        }
+        @media (max-width:420px){ .btn{ min-width:110px; padding:.6rem .9rem; height:44px; } }
+
+    </style>
+</head>
+<body>
+<div class="game-container">
+    <button class="mute-btn" id="muteBtn" title="Silenciar/Activar sonido">🔊</button>
+
+    <!-- Pantalla de Inicio -->
+    <section class="screen active" id="startScreen">
+        <header>
+            <h1>La fotosíntesis</h1>
+            <div class="subtitle">¿Cómo se alimentan las plantas?</div>
+        </header>
+
+        <div class="start-content">
+            <div class="advice-box">
+                <span class="advice-text">Estudia el proceso de la fotosíntesis y descubre cómo la <span class="highlight-keyword">raíz</span>, el <span class="highlight-keyword">tallo</span> y las <span class="highlight-keyword">hojas</span> participan para crear el <span class="highlight-keyword">alimento</span> de las plantas.</span>
+                <strong style="display:block; margin-top:0.5rem; text-align:center;">¡Ánimo!</strong>
+            </div>
+            
+            <button class="btn btn-primary" id="playBtn">Comenzar</button>
+            
+            <img class="start-image" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Ni%C3%B1os.png" alt="Niños aprendiendo">
+            
+            <div class="hall-of-fame" id="hallOfFame">
+              <div class="hall-of-fame-title">🏆 Mejores puntuaciones 🏆</div>
+              <table class="hall-of-fame-table">
+                  <thead>
+                        <tr>
+                            <th>Posición</th>
+                            <th>Nombre</th>
+                            <th>Puntos</th>
+                            <th>Tiempo</th>
+                        </tr>
+                    </thead>
+                    <tbody id="hofTableBody">
+                      </tbody>
+              </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pantalla Estudio -->
+    <section class="screen" id="summaryScreen">
+        <header>
+            <h1>Fases del proceso de fotosíntesis</h1>
+        </header>
+        <div class="theory-box">
+            <div class="theory-item">
+                <span class="theory-title">Absorción de la raíz</span>
+                La raíz absorbe agua y sales minerales. Esa mezcla forma la savia bruta.
+            </div>
+            <div class="theory-item">
+                <span class="theory-title">Transporte a la hoja</span>
+                La savia bruta sube por el tallo hasta llegar a las hojas.
+            </div>
+            <div class="theory-item">
+                <span class="theory-title">Absorción en la hoja</span>
+                Las hojas toman luz del sol y dióxido de carbono del aire.
+            </div>
+            <div class="theory-item">
+                <span class="theory-title">Fotosíntesis</span>
+                La savia bruta se transforma en savia elaborada (alimento) y se expulsa oxígeno al aire.
+            </div>
+            <div class="theory-item">
+                <span class="theory-title">Distribución del alimento</span>
+                La savia elaborada se reparte por toda la planta a través del tallo.
+            </div>
+        </div>
+        <div style="text-align: center;">
+            <button class="btn btn-primary" id="startGameBtn">Jugar</button>
+        </div>
+    </section>
+
+    <!-- Pantalla Juego 1 -->
+    <section class="screen" id="game1Screen">
+        <header>
+            <h1>La fotosíntesis</h1>
+            <div class="subtitle">Rellena los huecos para completar el texto</div>
+        </header>
+        <div class="game-info">
+            <div class="timer" id="timerGame1">00:00.0</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFillGame1"></div></div>
+            <div class="timer" style="font-size:0.9rem;">Intentos: <span id="attemptsGame1">0</span></div>
+        </div>
+        <div class="fill-game-container">
+            <div class="word-bank" id="wordBank"></div>
+            <div id="textContainer"></div>
+            <div class="game-controls">
+                <button class="btn btn-primary" id="checkGame1Btn">Comprobar</button>
+                <button class="btn btn-blue hidden" id="continueFromGame1Btn">Continuar</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pantalla Juego 2 -->
+    <section class="screen" id="game2Screen">
+        <header>
+            <h1>Ordena el proceso de la fotosíntesis</h1>
+        </header>
+        <div class="game-info">
+            <div class="timer" id="timerGame2">00:00.0</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFillGame2"></div></div>
+            <div class="timer" style="font-size:0.9rem; visibility:hidden;">Intentos: <span id="attemptsGame2">0</span></div>
+        </div>
+        <div class="ordering-container" id="orderingContainer">
+            <!-- Las tarjetas se generarán aquí -->
+        </div>
+        <div class="game-controls">
+            <button class="btn btn-primary" id="checkGame2Btn">Comprobar</button>
+            <button class="btn btn-blue hidden" id="continueFromGame2Btn">Continuar</button>
+        </div>
+    </section>
+
+    <!-- Pantalla Juego 3 -->
+    <section class="screen" id="game3Screen">
+        <header>
+            <h1>Identifica las fases de la fotosíntesis</h1>
+        </header>
+        <div class="game-info">
+            <div class="timer" id="timerGame3">00:00.0</div>
+            <div class="progress-bar"><div class="progress-fill" id="progressFillGame3"></div></div>
+            <div class="timer" style="font-size:0.9rem;">Intentos: <span id="attemptsGame3">0</span></div>
+        </div>
+        <div class="pairs-container">
+            <div class="pair-column" id="termsColumn"></div>
+            <div class="pair-column" id="defsColumn"></div>
+        </div>
+    </section>
+
+    <!-- Pantalla Final -->
+    <section class="screen" id="finalScreen">
+        <header>
+            <h1 class="final-title">La fotosíntesis</h1>
+        </header>
+        <div class="results">
+            <div id="trophyBox">🏆</div>
+            
+            <div class="score-title">Puntuación:</div>
+            <div class="big-score" id="finalScore">0</div>
+            <div class="final-time">Tiempo: <span id="finalTime">00:00.0</span></div>
+            <div id="finalMsg" class="subtitle"></div>
+            <button class="btn btn-primary" id="backToMenuBtn" style="background:var(--orange);">Volver al menú</button>
+            <span class="credit">Creado por Manuel J. Ventura</span>
+            <img class="school-logo" src="https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Siurot.png" alt="Logo del colegio" />
+        </div>
+    </section>
+</div>
+
+<div id="submitModal" class="modal-overlay">
+    <div class="modal-content">
+        <h3>¡Juego Terminado!</h3>
+        <p>Tu tiempo: <span id="modalTime">00:00.0</span></p>
+        <input type="text" id="playerName" class="modal-input" placeholder="Nombre" maxlength="15">
+        <input type="text" id="playerSurname" class="modal-input" placeholder="Apellido" maxlength="20">
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button id="submitScoreBtn" class="btn btn-primary">Guardar</button>
+            <button id="discardScoreBtn" class="btn btn-ghost">Cancelar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    /* --- 1. CONFIGURACIÓN DE VARIABLES GLOBALES (CRÍTICO) --- */
+    const SHEET_NAME = "Fotosintesis";
+    const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbu0fcjUhXKQ0sbUkNOx4YhfUno7mif5clU3lBipogFsCtq7UytDrEW8NbTXBvM0LCPQ/exec";
+    
+    let soundEnabled = true;
+    let audioUnlocked = false;
+    let isMuted = false;
+    let userInteracted = false;
+
+    // Variables GLOBALES de tiempo y juego
+    let startTime = 0;
+    let timerInterval = null;
+    let elapsed = 0;
+    let timerStopped = false; 
+    
+    let finalScoreVal = 0; 
+    let finalTimeVal = 0; 
+    
+    // ORDEN FIJO DE JUEGOS
+    let gameFlowOrder = ['game1', 'game2', 'game3']; 
+    let currentGameStep = 0;
+
+    /* --- AUDIOS --- */
+    const audioUrls = {
+        correct: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Correcto.mp3',
+        error: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Error.mp3',
+        tap: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Tap.mp3',
+        victory: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Termin%C3%A9.mp3',
+        completed: 'https://raw.githubusercontent.com/ManuelVS8/Efectos_audio/refs/heads/main/Completado.mp3'
+    };
+    
+    const audioObjects = {};
+    Object.keys(audioUrls).forEach(key => { 
+        const a = new Audio();
+        a.src = audioUrls[key];
+        a.preload = 'auto';
+        audioObjects[key] = a; 
+    });
+
+    function unlockAudio() {
+        if (audioUnlocked) return;
+        try {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator(); const g = ctx.createGain();
+            osc.connect(g); g.connect(ctx.destination); g.gain.value = 0.001;
+            osc.start(); osc.stop(ctx.currentTime + 0.01);
+            audioUnlocked = true;
+            isMuted = false;
+        } catch(e) { audioUnlocked = true; }
+    }
+
+    function reproducirSonidoTap() {
+        if (isMuted) return;
+        if (!audioUnlocked) unlockAudio();
+        const a = audioObjects['tap'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+
+    function reproducirSonidoCorrecto() {
+        if (isMuted) return;
+        if (!audioUnlocked) unlockAudio();
+        const a = audioObjects['correct'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+
+    function reproducirSonidoError() {
+        if (isMuted) return;
+        if (!audioUnlocked) unlockAudio();
+        const a = audioObjects['error'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+
+    function reproducirSonidoVictoria() {
+        if (isMuted) return;
+        if (!audioUnlocked) unlockAudio();
+        const a = audioObjects['victory'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+
+    function reproducirSonidoCompletado() {
+        if (isMuted) return;
+        if (!audioUnlocked) unlockAudio();
+        const a = audioObjects['completed'];
+        if(!a) return;
+        try { a.currentTime = 0; a.play(); } catch(e){}
+    }
+
+    function toggleSound() {
+        isMuted = !isMuted;
+        document.getElementById('muteBtn').textContent = isMuted ? '🔇' : '🔊';
+    }
+
+    /* --- LÓGICA GENERAL --- */
+    function showScreen(id) {
+        document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+    }
+
+    function startGlobalTimer() {
+        if (timerInterval) return; 
+        
+        if (!timerStopped) {
+            startTime = Date.now();
+            elapsed = 0;
+        } else {
+            startTime = Date.now() - (elapsed * 1000);
+            timerStopped = false;
+        }
+
+        timerInterval = setInterval(() => {
+            const now = Date.now();
+            const delta = (now - startTime) / 1000;
+            elapsed = delta;
+            updateTimerDisplay(elapsed);
+        }, 100);
+    }
+
+    function stopTimerForCheck() {
+        if (timerInterval) {
+            clearInterval(timerInterval);
+            timerInterval = null;
+            timerStopped = true;
+        }
+    }
+
+    function updateTimerDisplay(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        const ms = Math.round((sec % 1) * 10);
+        const timeStr = `${m}:${s}.${ms}`;
+        
+        ['timerGame1','timerGame2','timerGame3'].forEach(id => {
+            const el = document.getElementById(id);
+            if(el) el.textContent = timeStr;
+        });
+    }
+
+    function formatTime(sec) {
+        const m = Math.floor(sec / 60).toString().padStart(2, '0');
+        const s = Math.floor(sec % 60).toString().padStart(2, '0');
+        const ms = Math.round((sec % 1) * 10);
+        return `${m}:${s}.${ms}`;
+    }
+
+    function updateProgress(id, pct) {
+        const el = document.getElementById(id);
+        if(el) el.style.width = pct + '%';
+    }
+
+    /* --- LÓGICA DE FLUJO DE JUEGOS --- */
+    function initGameSequence() {
+        // El orden ahora es FIJO: ['game1', 'game2', 'game3']
+        // Ya definido globalmente.
+        currentGameStep = 0;
+        
+        scoreData = {
+            g1Correct: 0, g1Total: 10,
+            g2Correct: 0, g2Total: 5,
+            g3Pairs: 5, g3Attempts: 0
+        };
+        
+        startGlobalTimer();
+        loadNextGame();
+    }
+
+    let scoreData = { g1Correct:0, g2Correct:0, g3Pairs:5, g3Attempts:0 };
+
+    function loadNextGame() {
+        const progress = (currentGameStep / 3) * 100;
+        updateProgress('progressFillGame1', progress);
+        
+        const gameType = gameFlowOrder[currentGameStep];
+        
+        if (gameType === 'game1') {
+            initGame1();
+            showScreen('game1Screen');
+        } else if (gameType === 'game2') {
+            initGame2();
+            showScreen('game2Screen');
+        } else if (gameType === 'game3') {
+            initGame3();
+            showScreen('game3Screen');
+        }
+    }
+
+    function advanceGameSequence() {
+        currentGameStep++;
+        if (currentGameStep < 3) {
+            loadNextGame();
+        } else {
+            finishGame();
+        }
+    }
+
+    /* --- JUEGO 1: COMPLETAR HUECOS --- */
+    const g1FullText = [
+        "La raíz absorbe {agua} y {sales minerales}. Esa mezcla forma la {savia bruta}.",
+        "La savia bruta sube por el {tallo} hasta llegar a las {hojas}.",
+        "Las hojas toman {luz del sol} y {dióxido de carbono} del aire.",
+        "La savia bruta se transforma en {savia elaborada} y se expulsa {oxígeno} al aire.",
+        "La savia elaborada se reparte por toda la {planta} a través del tallo."
+    ];
+    const g1Answers = ["agua", "sales minerales", "savia bruta", "tallo", "hojas", "luz del sol", "dióxido de carbono", "savia elaborada", "oxígeno", "planta"];
+    
+    let selectedWordBankItem = null;
+    let g1Attempts = 0;
+
+    function initGame1() {
+        const bank = document.getElementById('wordBank');
+        const container = document.getElementById('textContainer');
+        const checkBtn = document.getElementById('checkGame1Btn');
+        const contBtn = document.getElementById('continueFromGame1Btn');
+        
+        bank.innerHTML = '';
+        container.innerHTML = '';
+        checkBtn.classList.remove('hidden');
+        contBtn.classList.add('hidden');
+        document.getElementById('attemptsGame1').textContent = '0';
+        g1Attempts = 0;
+        scoreData.g1Correct = 0;
+
+        const shuffledAnswers = [...g1Answers].sort(() => Math.random() - 0.5);
+        
+        shuffledAnswers.forEach(word => {
+            const el = document.createElement('div');
+            el.className = 'draggable-word';
+            el.textContent = word;
+            el.draggable = true;
+            el.dataset.word = word;
+            
+            el.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', word);
+                e.dataTransfer.effectAllowed = 'copyMove';
+                selectWordForTap(el);
+            });
+            el.addEventListener('click', () => selectWordForTap(el));
+            bank.appendChild(el);
+        });
+
+        let html = '';
+        g1FullText.forEach((paragraph, pIdx) => {
+            const processedText = paragraph.replace(/{(.*?)}/g, (match, captured) => {
+                return `<span class="dropzone" data-answer="${captured}" data-idx="${pIdx}-${captured}"></span>`;
+            });
+            html += `<p class="text-paragraph">${processedText}</p>`;
+        });
+        container.innerHTML = html;
+
+        document.querySelectorAll('.dropzone').forEach(dz => {
+            dz.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                e.dataTransfer.dropEffect = 'move';
+            });
+            dz.addEventListener('drop', handleDrop);
+            dz.addEventListener('click', handleDropzoneClick);
+        });
+    }
+
+    function selectWordForTap(el) {
+        if(el.classList.contains('hidden')) return;
+        document.querySelectorAll('.draggable-word').forEach(w => w.style.borderColor = 'var(--blue-600)');
+        selectedWordBankItem = el;
+        el.style.borderColor = 'var(--orange)';
+        reproducirSonidoTap();
+    }
+
+    function handleDrop(e) {
+        e.preventDefault();
+        let word = e.dataTransfer.getData('text/plain');
+        if (!word && selectedWordBankItem) {
+            word = selectedWordBankItem.dataset.word;
+        }
+        
+        if (word) {
+            placeWordInDropzone(this, word);
+        }
+        
+        document.querySelectorAll('.draggable-word').forEach(w => w.style.borderColor = 'var(--blue-600)');
+        selectedWordBankItem = null;
+    }
+
+    function handleDropzoneClick() {
+        if (selectedWordBankItem) {
+            placeWordInDropzone(this, selectedWordBankItem.dataset.word);
+            document.querySelectorAll('.draggable-word').forEach(w => w.style.borderColor = 'var(--blue-600)');
+            selectedWordBankItem = null;
+        }
+    }
+
+    function placeWordInDropzone(dz, word) {
+        if (dz.hasChildNodes()) return; 
+
+        const bankItem = Array.from(document.querySelectorAll('.draggable-word')).find(el => el.dataset.word === word && !el.classList.contains('hidden'));
+        if (bankItem) bankItem.classList.add('hidden');
+
+        const span = document.createElement('span');
+        span.className = 'placed-word';
+        span.textContent = word;
+        span.dataset.word = word;
+        span.onclick = (e) => {
+            e.stopPropagation(); 
+            returnWordToBank(word);
+            dz.innerHTML = '';
+            dz.classList.remove('filled');
+            reproducirSonidoTap();
+        };
+
+        dz.innerHTML = '';
+        dz.appendChild(span);
+        dz.classList.add('filled');
+        reproducirSonidoTap();
+    }
+
+    function returnWordToBank(word) {
+        const bankItem = Array.from(document.querySelectorAll('.draggable-word')).find(el => el.dataset.word === word);
+        if (bankItem) bankItem.classList.remove('hidden');
+    }
+
+    document.getElementById('checkGame1Btn').onclick = () => {
+        stopTimerForCheck();
+        let allCorrect = true;
+        let correctCount = 0;
+        const zones = document.querySelectorAll('.dropzone');
+        
+        zones.forEach(z => {
+            const placed = z.querySelector('.placed-word');
+            const expected = z.dataset.answer;
+            
+            z.classList.remove('correct', 'incorrect');
+            
+            if (placed && placed.dataset.word === expected) {
+                z.classList.add('correct');
+                correctCount++;
+            } else {
+                z.classList.add('incorrect');
+                allCorrect = false;
+            }
+        });
+
+        scoreData.g1Correct = correctCount;
+        document.getElementById('checkGame1Btn').classList.add('hidden');
+        document.getElementById('continueFromGame1Btn').classList.remove('hidden');
+
+        if (allCorrect) reproducirSonidoCorrecto();
+        else reproducirSonidoError();
+    };
+
+    document.getElementById('continueFromGame1Btn').onclick = () => {
+        startGlobalTimer();
+        advanceGameSequence();
+    };
+
+    /* --- JUEGO 2: ORDENAR FASES --- */
+    const g2Phases = [
+        "La raíz absorbe agua y sales minerales. Esa mezcla se llama savia bruta",
+        "La savia bruta sube por el tallo hasta la hoja.",
+        "La hoja toma dióxido de carbono del aire y luz del sol.",
+        "La savia bruta se transforma en savia elaborada y se expulsa oxígeno al aire.",
+        "La savia elaborada se reparte por toda la planta a través del tallo."
+    ];
+
+    function initGame2() {
+        const container = document.getElementById('orderingContainer');
+        container.innerHTML = '';
+        document.getElementById('checkGame2Btn').classList.remove('hidden');
+        document.getElementById('continueFromGame2Btn').classList.add('hidden');
+        scoreData.g2Correct = 0;
+
+        let cardObjects = g2Phases.map((text, index) => ({ text, originalIndex: index }));
+        cardObjects.sort(() => Math.random() - 0.5);
+
+        cardObjects.forEach((obj, currentVisualIndex) => {
+            const card = document.createElement('div');
+            card.className = 'phase-card';
+            card.dataset.originalIndex = obj.originalIndex;
+            
+            const textSpan = document.createElement('div');
+            textSpan.className = 'card-text';
+            textSpan.textContent = obj.text;
+            card.appendChild(textSpan);
+
+            const arrowsDiv = document.createElement('div');
+            arrowsDiv.className = 'arrows-container';
+
+            const upBtn = document.createElement('button');
+            upBtn.className = 'arrow-btn';
+            upBtn.innerHTML = '▲';
+            upBtn.onclick = () => moveCard(card, -1);
+
+            const downBtn = document.createElement('button');
+            downBtn.className = 'arrow-btn';
+            downBtn.innerHTML = '▼';
+            downBtn.onclick = () => moveCard(card, 1);
+
+            arrowsDiv.appendChild(upBtn);
+            arrowsDiv.appendChild(downBtn);
+            card.appendChild(arrowsDiv);
+
+            container.appendChild(card);
+        });
+        
+        updateArrowsState();
+    }
+
+    function moveCard(card, direction) {
+        const container = document.getElementById('orderingContainer');
+        const cards = Array.from(container.children);
+        const index = cards.indexOf(card);
+        const newIndex = index + direction;
+
+        if (newIndex < 0 || newIndex >= cards.length) return;
+
+        if (direction === -1) {
+            container.insertBefore(card, cards[newIndex]);
+        } else {
+            container.insertBefore(card, cards[newIndex + 1]);
+        }
+
+        highlightCard(card);
+        reproducirSonidoTap();
+        updateArrowsState();
+    }
+
+    function highlightCard(card) {
+        document.querySelectorAll('.phase-card').forEach(c => c.classList.remove('highlighted'));
+        card.classList.add('highlighted');
+    }
+
+    function updateArrowsState() {
+        const container = document.getElementById('orderingContainer');
+        const cards = container.children;
+        for (let i = 0; i < cards.length; i++) {
+            const card = cards[i];
+            const upBtn = card.querySelector('.arrow-btn:first-child');
+            const downBtn = card.querySelector('.arrow-btn:last-child');
+            
+            upBtn.disabled = (i === 0);
+            downBtn.disabled = (i === cards.length - 1);
+        }
+    }
+
+    document.getElementById('checkGame2Btn').onclick = () => {
+        stopTimerForCheck();
+        const cards = Array.from(document.getElementById('orderingContainer').children);
+        let correctCount = 0;
+        let allCorrect = true;
+
+        cards.forEach((card, index) => {
+            card.classList.remove('correct-order', 'wrong-order', 'highlighted');
+            const originalIndex = parseInt(card.dataset.originalIndex);
+            if (originalIndex === index) {
+                card.classList.add('correct-order');
+                correctCount++;
+            } else {
+                card.classList.add('wrong-order');
+                allCorrect = false;
+            }
+        });
+
+        scoreData.g2Correct = correctCount;
+        document.getElementById('checkGame2Btn').classList.add('hidden');
+        
+        if (allCorrect) {
+            reproducirSonidoCorrecto();
+            setTimeout(() => {
+                startGlobalTimer();
+                advanceGameSequence();
+            }, 1000);
+        } else {
+            reproducirSonidoError();
+            document.getElementById('continueFromGame2Btn').classList.remove('hidden');
+        }
+    };
+
+    document.getElementById('continueFromGame2Btn').onclick = () => {
+        startGlobalTimer();
+        advanceGameSequence();
+    };
+
+    /* --- JUEGO 3: BUSCAR PAREJAS --- */
+    const g3Pairs = [
+        { term: "Absorción de la raíz", def: "La raíz absorbe agua y sales minerales. Esa mezcla forma la savia bruta." },
+        { term: "Transporte a la hoja", def: "La savia bruta sube por el tallo hasta llegar a las hojas." },
+        { term: "Absorción en la hoja", def: "Las hojas toman luz del sol y dióxido de carbono del aire" },
+        { term: "Fotosíntesis", def: "En la hoja se mezclan la savia bruta, la luz del sol y el dióxido de carbono para formar la savia elaborada (alimento) y se expulsa oxígeno al aire." },
+        { term: "Distribución del alimento", def: "La savia elaborada se reparte por toda la planta a través del tallo." }
+    ];
+
+    let selectedPairCard = null;
+    let g3Matches = 0;
+
+    function initGame3() {
+        const termsCol = document.getElementById('termsColumn');
+        const defsCol = document.getElementById('defsColumn');
+        termsCol.innerHTML = '';
+        defsCol.innerHTML = '';
+        g3Matches = 0;
+        scoreData.g3Attempts = 0;
+        document.getElementById('attemptsGame3').textContent = '0';
+        updateProgress('progressFillGame3', 0);
+
+        let terms = g3Pairs.map((p, i) => ({ text: p.term, id: i, type: 'term' }));
+        let defs = g3Pairs.map((p, i) => ({ text: p.def, id: i, type: 'def' }));
+
+        terms.sort(() => Math.random() - 0.5);
+        defs.sort(() => Math.random() - 0.5);
+
+        terms.forEach(item => createPairCard(item, termsCol));
+        defs.forEach(item => createPairCard(item, defsCol));
+    }
+
+    function createPairCard(item, container) {
+        const card = document.createElement('div');
+        card.className = 'pair-card';
+        card.textContent = item.text;
+        card.dataset.id = item.id;
+        card.onclick = () => handlePairClick(card);
+        container.appendChild(card);
+    }
+
+    function handlePairClick(card) {
+        if (card.classList.contains('matched') || card.classList.contains('selected')) return;
+
+        reproducirSonidoTap();
+        card.classList.add('selected');
+
+        if (!selectedPairCard) {
+            selectedPairCard = card;
+        } else {
+            scoreData.g3Attempts++;
+            document.getElementById('attemptsGame3').textContent = scoreData.g3Attempts;
+
+            if (selectedPairCard.dataset.id === card.dataset.id) {
+                reproducirSonidoCorrecto();
+                selectedPairCard.classList.remove('selected');
+                card.classList.remove('selected');
+                selectedPairCard.classList.add('matched');
+                card.classList.add('matched');
+                selectedPairCard = null;
+                
+                g3Matches++;
+                updateProgress('progressFillGame3', (g3Matches / 5) * 100);
+
+                if (g3Matches === 5) {
+                    setTimeout(finishGame, 500);
+                }
+            } else {
+                reproducirSonidoError();
+                selectedPairCard.classList.add('flash-error');
+                card.classList.add('flash-error');
+                
+                setTimeout(() => {
+                    selectedPairCard.classList.remove('selected', 'flash-error');
+                    card.classList.remove('selected', 'flash-error');
+                    selectedPairCard = null;
+                }, 200);
+            }
+        }
+    }
+
+    /* --- FINALIZAR --- */
+    function finishGame() {
+        stopTimerForCheck();
+        finalTimeVal = elapsed;
+        
+        const val1 = scoreData.g1Correct / 10;
+        const val2 = scoreData.g2Correct / 5;
+        const val3 = scoreData.g3Attempts > 0 ? (5 / scoreData.g3Attempts) : 0;
+        
+        finalScoreVal = Math.round(((val1 + val2 + val3) / 3) * 100);
+
+        document.getElementById('finalScore').textContent = finalScoreVal;
+        document.getElementById('finalTime').textContent = formatTime(finalTimeVal);
+
+        const trophyBox = document.getElementById('trophyBox');
+        const msg = document.getElementById('finalMsg');
+        
+        if (finalScoreVal === 100) {
+            trophyBox.style.display = 'block';
+            msg.textContent = '¡Enhorabuena, puntuación máxima!';
+            reproducirSonidoVictoria();
+            createConfetti();
+        } else {
+            trophyBox.style.display = 'none';
+            msg.textContent = '¡Buen trabajo! Sigue practicando';
+            reproducirSonidoCompletado();
+        }
+
+        showScreen('finalScreen');
+        showSubmitModal(finalTimeVal, finalScoreVal);
+    }
+
+    /* --- EFECTOS VISUALES --- */
+    function createConfetti() {
+        for(let i=0;i<100;i++){
+            setTimeout(()=>{
+                const c = document.createElement('div');
+                c.className = 'confetti';
+                const x = Math.random() * window.innerWidth;
+                const tx = (Math.random() - 0.5) * 200;
+                c.style.left = x + 'px';
+                c.style.top = '-10px';
+                c.style.backgroundColor = ['#ff595e','#1982c4','#6a4c93','#ffca3a','#8ac926'][Math.floor(Math.random()*5)];
+                c.style.setProperty('--tx', tx + 'px');
+                c.style.setProperty('--ty', window.innerHeight + 20 + 'px');
+                document.body.appendChild(c);
+                setTimeout(() => c.remove(), 3000);
+            }, i * 20);
+        }
+    }
+
+    /* --- HALL OF FAME --- */
+    let isHofLoading = false;
+
+    function loadHallOfFame() {
+        if (isHofLoading) return;
+        isHofLoading = true;
+
+        const tbody = document.getElementById('hofTableBody');
+        tbody.innerHTML = '<tr><td colspan="4" class="hall-of-fame-loading">Cargando datos...</td></tr>';
+
+        const url = `${APP_SCRIPT_URL}?action=read&sheet=${SHEET_NAME}`;
+
+        const fetchPromise = fetch(url);
+        const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("Timeout")), 8000));
+
+        Promise.race([fetchPromise, timeoutPromise])
+            .then(r => r.json())
+            .then(data => {
+                if (data.status === 'success' && data.data) {
+                    const processedData = data.data.map(row => {
+                        const getVal = (keys) => {
+                            for(let key of keys) {
+                                if(row[key] !== undefined && row[key] !== "") return row[key];
+                            }
+                            return null;
+                        };
+                        return {
+                            Nombre: getVal(["Nombre", "nombre", "name"]),
+                            Apellidos: getVal(["Apellidos", "apellidos", "surname"]),
+                            Puntuación: getVal(["Puntuación", "puntuación", "score"]),
+                            Tiempo: getVal(["Tiempo", "tiempo", "time"])
+                        };
+                    });
+
+                    const validData = processedData.filter(row => row.Puntuación !== null && !isNaN(parseFloat(row.Puntuación)));
+
+                    if (validData.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="4" class="hall-of-fame-error">Aún no hay datos. Sé el primero en añadir puntuación</td></tr>';
+                    } else {
+                        validData.sort((a, b) => {
+                            const scoreA = parseFloat(a.Puntuación) || 0;
+                            const scoreB = parseFloat(b.Puntuación) || 0;
+                            if (scoreB !== scoreA) return scoreB - scoreA;
+                            const timeA = parseFloat(a.Tiempo) || 9999;
+                            const timeB = parseFloat(b.Tiempo) || 9999;
+                            return timeA - timeB;
+                        });
+
+                        tbody.innerHTML = '';
+                        const top10 = validData.slice(0, 10);
+
+                        for (let i = 0; i < top10.length; i++) {
+                            const item = top10[i];
+                            const tr = document.createElement('tr');
+                            const displayName = `${item.Nombre} ${item.Apellidos}`.trim();
+                            let timeStr = item.Tiempo;
+                            if (!isNaN(parseFloat(item.Tiempo))) {
+                                const tVal = parseFloat(item.Tiempo);
+                                const tm = Math.floor(tVal / 60).toString().padStart(2,'0');
+                                const ts = Math.floor(tVal % 60).toString().padStart(2,'0');
+                                const tms = Math.round((tVal % 1) * 10);
+                                timeStr = `${tm}:${ts}.${tms}`;
+                            }
+                            const points = item.Puntuación || 0;
+
+                            tr.innerHTML = `
+                                <td>${i + 1}º</td>
+                                <td>${displayName}</td>
+                                <td>${points}</td>
+                                <td>${timeStr}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        }
+                    }
+                } else {
+                    tbody.innerHTML = '<tr><td colspan="4" class="hall-of-fame-error">Error de conexión.</td></tr>';
+                }
+            })
+            .catch(e => {
+                console.error("Error HoF:", e);
+                tbody.innerHTML = '<tr><td colspan="4" class="hall-of-fame-error">Error de conexión o timeout.</td></tr>';
+            })
+            .finally(() => {
+                isHofLoading = false;
+            });
+    }
+
+    function showSubmitModal(time, score) {
+        document.getElementById('modalTime').textContent = formatTime(time);
+        document.getElementById('playerName').value = '';
+        document.getElementById('playerSurname').value = '';
+        document.getElementById('submitModal').style.display = 'flex';
+    }
+
+    document.getElementById('discardScoreBtn').onclick = () => { 
+        document.getElementById('submitModal').style.display = 'none'; 
+    };
+
+    document.getElementById('submitScoreBtn').onclick = () => {
+        const btn = document.getElementById('submitScoreBtn');
+        const nameInput = document.getElementById('playerName');
+        const surnameInput = document.getElementById('playerSurname');
+        
+        const payload = {
+            score: finalScoreVal,
+            time: finalTimeVal, 
+            name: nameInput.value.trim(),
+            surname: surnameInput.value.trim()
+        };
+
+        if(payload.name && payload.surname) {
+            const originalText = btn.textContent;
+            btn.textContent = "Enviando...";
+            btn.disabled = true;
+
+            fetch(APP_SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                body: JSON.stringify({ sheet: SHEET_NAME, action: 'write', data: payload })
+            })
+            .then(() => {
+                document.getElementById('submitModal').style.display = 'none';
+                btn.textContent = originalText;
+                btn.disabled = false;
+                setTimeout(loadHallOfFame, 1500);
+            })
+            .catch(e => {
+                console.error("Error envío:", e);
+                alert("Error al enviar puntuación.");
+                btn.textContent = originalText;
+                btn.disabled = false;
+            });
+        } else {
+            alert("Por favor, completa ambos campos.");
+        }
+    };
+
+    /* --- EVENTOS --- */
+    document.getElementById('playBtn').onclick = () => { 
+        reproducirSonidoTap(); 
+        showScreen('summaryScreen'); 
+    };
+    document.getElementById('startGameBtn').onclick = () => { 
+        reproducirSonidoTap(); 
+        initGameSequence(); 
+    };
+    
+    document.getElementById('backToMenuBtn').onclick = () => { 
+        reproducirSonidoTap(); 
+        location.reload(); 
+    };
+    document.getElementById('muteBtn').onclick = toggleSound;
+
+    /* --- INIT --- */
+    document.addEventListener('DOMContentLoaded', () => { loadHallOfFame(); });
+
+</script>
+</body>
+</html>
