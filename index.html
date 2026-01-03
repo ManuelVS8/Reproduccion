@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>La Fotosíntesis - Proceso vital</title>
+    <title>Reproducción de plantas con flor - Proceso vital</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/icono.ico">
     <style>
         /* ====== Reset & base ====== */
@@ -94,7 +94,7 @@
 
         /* Título en renglón superior */
         .theory-title {
-            color: var(--blue-dark);
+            color: var(--orange);
             font-weight: 800;
             font-size: 1.15rem;
             margin-bottom: 6px;
@@ -379,14 +379,13 @@
     <!-- Pantalla de Inicio -->
     <section class="screen active" id="startScreen">
         <header>
-            <h1>La fotosíntesis</h1>
-            <div class="subtitle">¿Cómo se alimentan las plantas?</div>
+            <h1>Reproducción de las plantas con flor</h1>
+            <div class="subtitle">¿Cómo se reproducen las plantas con flor?</div>
         </header>
 
         <div class="start-content">
             <div class="advice-box">
-                <span class="advice-text">Estudia el proceso de la fotosíntesis y descubre cómo la <span class="highlight-keyword">raíz</span>, el <span class="highlight-keyword">tallo</span> y las <span class="highlight-keyword">hojas</span> participan para crear el <span class="highlight-keyword">alimento</span> de las plantas.</span>
-                <strong style="display:block; margin-top:0.5rem; text-align:center;">¡Ánimo!</strong>
+                <span class="advice-text">Estudia el proceso de reproducción de las plantas con flor y descubre cómo el <span class="highlight-keyword">estambre</span>, el <span class="highlight-keyword">polen</span>, el <span class="highlight-keyword">pistilo</span> y los <span class="highlight-keyword">óvulos</span> participan para crear el alimento de las plantas. <strong>¡Ánimo!</strong></span>
             </div>
             
             <button class="btn btn-primary" id="playBtn">Comenzar</button>
@@ -414,28 +413,24 @@
     <!-- Pantalla Estudio -->
     <section class="screen" id="summaryScreen">
         <header>
-            <h1>Fases del proceso de fotosíntesis</h1>
+            <h1>La reproducción de plantas con flor</h1>
         </header>
         <div class="theory-box">
             <div class="theory-item">
-                <span class="theory-title">Absorción de la raíz</span>
-                La raíz absorbe agua y sales minerales. Esa mezcla forma la savia bruta.
+                <span class="theory-title">Polinización</span>
+                El polen del estambre entra en el pistilo de una flor.
             </div>
             <div class="theory-item">
-                <span class="theory-title">Transporte a la hoja</span>
-                La savia bruta sube por el tallo hasta llegar a las hojas.
+                <span class="theory-title">Fecundación</span>
+                El polen baja por el pistilo y llega hasta el óvulo.
             </div>
             <div class="theory-item">
-                <span class="theory-title">Absorción en la hoja</span>
-                Las hojas toman luz del sol y dióxido de carbono del aire.
+                <span class="theory-title">Formación del fruto</span>
+                El pistilo crece y se convierte en un fruto con semillas dentro.
             </div>
             <div class="theory-item">
-                <span class="theory-title">Fotosíntesis</span>
-                La savia bruta se transforma en savia elaborada (alimento) y se expulsa oxígeno al aire.
-            </div>
-            <div class="theory-item">
-                <span class="theory-title">Distribución del alimento</span>
-                La savia elaborada se reparte por toda la planta a través del tallo.
+                <span class="theory-title">Germinación</span>
+                Las semillas caen al suelo y germina una nueva planta.
             </div>
         </div>
         <div style="text-align: center;">
@@ -446,7 +441,7 @@
     <!-- Pantalla Juego 1 -->
     <section class="screen" id="game1Screen">
         <header>
-            <h1>La fotosíntesis</h1>
+            <h1>La reproducción de plantas con flor</h1>
             <div class="subtitle">Rellena los huecos para completar el texto</div>
         </header>
         <div class="game-info">
@@ -467,7 +462,7 @@
     <!-- Pantalla Juego 2 -->
     <section class="screen" id="game2Screen">
         <header>
-            <h1>Ordena el proceso de la fotosíntesis</h1>
+            <h1>Ordena el proceso de la reproducción de plantas con flor</h1>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame2">00:00.0</div>
@@ -486,7 +481,7 @@
     <!-- Pantalla Juego 3 -->
     <section class="screen" id="game3Screen">
         <header>
-            <h1>Identifica las fases de la fotosíntesis</h1>
+            <h1>Identifica las fases de la reproducción de plantas con flor</h1>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame3">00:00.0</div>
@@ -502,7 +497,7 @@
     <!-- Pantalla Final -->
     <section class="screen" id="finalScreen">
         <header>
-            <h1 class="final-title">La fotosíntesis</h1>
+            <h1 class="final-title">Reproducción de las plantas con flor</h1>
         </header>
         <div class="results">
             <div id="trophyBox">🏆</div>
@@ -533,7 +528,7 @@
 
 <script>
     /* --- 1. CONFIGURACIÓN DE VARIABLES GLOBALES (CRÍTICO) --- */
-    const SHEET_NAME = "Fotosintesis";
+    const SHEET_NAME = "Reproduccion";
     const APP_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzbu0fcjUhXKQ0sbUkNOx4YhfUno7mif5clU3lBipogFsCtq7UytDrEW8NbTXBvM0LCPQ/exec";
     
     let soundEnabled = true;
@@ -550,8 +545,10 @@
     let finalScoreVal = 0; 
     let finalTimeVal = 0; 
     
-    // ORDEN FIJO DE JUEGOS
+    // ORDEN VARIABLE DE JUEGOS
     let gameFlowOrder = ['game1', 'game2', 'game3']; 
+    // Shuffle order on load
+    gameFlowOrder.sort(() => Math.random() - 0.5);
     let currentGameStep = 0;
 
     /* --- AUDIOS --- */
@@ -687,25 +684,25 @@
 
     /* --- LÓGICA DE FLUJO DE JUEGOS --- */
     function initGameSequence() {
-        // El orden ahora es FIJO: ['game1', 'game2', 'game3']
-        // Ya definido globalmente.
         currentGameStep = 0;
         
         scoreData = {
             g1Correct: 0, g1Total: 10,
-            g2Correct: 0, g2Total: 5,
-            g3Pairs: 5, g3Attempts: 0
+            g2Correct: 0, g2Total: 4,
+            g3Pairs: 4, g3Attempts: 0
         };
         
         startGlobalTimer();
         loadNextGame();
     }
 
-    let scoreData = { g1Correct:0, g2Correct:0, g3Pairs:5, g3Attempts:0 };
+    let scoreData = { g1Correct:0, g2Correct:0, g3Pairs:4, g3Attempts:0 };
 
     function loadNextGame() {
         const progress = (currentGameStep / 3) * 100;
         updateProgress('progressFillGame1', progress);
+        updateProgress('progressFillGame2', progress);
+        updateProgress('progressFillGame3', progress);
         
         const gameType = gameFlowOrder[currentGameStep];
         
@@ -732,13 +729,12 @@
 
     /* --- JUEGO 1: COMPLETAR HUECOS --- */
     const g1FullText = [
-        "La raíz absorbe {agua} y {sales minerales}. Esa mezcla forma la {savia bruta}.",
-        "La savia bruta sube por el {tallo} hasta llegar a las {hojas}.",
-        "Las hojas toman {luz del sol} y {dióxido de carbono} del aire.",
-        "La savia bruta se transforma en {savia elaborada} y se expulsa {oxígeno} al aire.",
-        "La savia elaborada se reparte por toda la {planta} a través del tallo."
+        "El polen del {estambre} entra en el pistilo de una {flor}.",
+        "El {polen} baja por el {pistilo} y llega hasta el {óvulo}.",
+        "El pistilo {crece} y se convierte en un {fruto} con {semillas} dentro.",
+        "Las semillas caen al suelo y {germina} una nueva {planta}."
     ];
-    const g1Answers = ["agua", "sales minerales", "savia bruta", "tallo", "hojas", "luz del sol", "dióxido de carbono", "savia elaborada", "oxígeno", "planta"];
+    const g1Answers = ["estambre", "flor", "polen", "pistilo", "óvulo", "crece", "fruto", "semillas", "germina", "planta"];
     
     let selectedWordBankItem = null;
     let g1Attempts = 0;
@@ -875,6 +871,8 @@
             }
         });
 
+        // Count empty or incorrect slots as errors towards the 10 total
+        // The formula requires correct / 10. If words remain in bank, they count as incorrect implicitly.
         scoreData.g1Correct = correctCount;
         document.getElementById('checkGame1Btn').classList.add('hidden');
         document.getElementById('continueFromGame1Btn').classList.remove('hidden');
@@ -890,11 +888,10 @@
 
     /* --- JUEGO 2: ORDENAR FASES --- */
     const g2Phases = [
-        "La raíz absorbe agua y sales minerales. Esa mezcla se llama savia bruta",
-        "La savia bruta sube por el tallo hasta la hoja.",
-        "La hoja toma dióxido de carbono del aire y luz del sol.",
-        "La savia bruta se transforma en savia elaborada y se expulsa oxígeno al aire.",
-        "La savia elaborada se reparte por toda la planta a través del tallo."
+        "El polen del estambre entra en el pistilo de una flor",
+        "El polen baja por el pistilo y llega hasta el óvulo",
+        "El pistilo crece y se convierte en un fruto con semillas dentro",
+        "Las semillas caen al suelo y germina una nueva planta"
     ];
 
     function initGame2() {
@@ -1017,11 +1014,10 @@
 
     /* --- JUEGO 3: BUSCAR PAREJAS --- */
     const g3Pairs = [
-        { term: "Absorción de la raíz", def: "La raíz absorbe agua y sales minerales. Esa mezcla forma la savia bruta." },
-        { term: "Transporte a la hoja", def: "La savia bruta sube por el tallo hasta llegar a las hojas." },
-        { term: "Absorción en la hoja", def: "Las hojas toman luz del sol y dióxido de carbono del aire" },
-        { term: "Fotosíntesis", def: "En la hoja se mezclan la savia bruta, la luz del sol y el dióxido de carbono para formar la savia elaborada (alimento) y se expulsa oxígeno al aire." },
-        { term: "Distribución del alimento", def: "La savia elaborada se reparte por toda la planta a través del tallo." }
+        { term: "Polinización", def: "El polen del estambre entra en el pistilo de una flor" },
+        { term: "Fecundación", def: "El polen baja por el pistilo y llega hasta el óvulo" },
+        { term: "Formación del fruto", def: "El pistilo crece y se convierte en un fruto con semillas dentro" },
+        { term: "Germinación", def: "Las semillas caen al suelo y germina una nueva planta" }
     ];
 
     let selectedPairCard = null;
@@ -1077,9 +1073,9 @@
                 selectedPairCard = null;
                 
                 g3Matches++;
-                updateProgress('progressFillGame3', (g3Matches / 5) * 100);
+                updateProgress('progressFillGame3', (g3Matches / 4) * 100);
 
-                if (g3Matches === 5) {
+                if (g3Matches === 4) {
                     setTimeout(finishGame, 500);
                 }
             } else {
@@ -1101,9 +1097,12 @@
         stopTimerForCheck();
         finalTimeVal = elapsed;
         
+        // Game 1: 10 words total. g1Correct counts correct ones.
+        // Formula: (correct/10) + (correct/4) + (4/attempts)
+        
         const val1 = scoreData.g1Correct / 10;
-        const val2 = scoreData.g2Correct / 5;
-        const val3 = scoreData.g3Attempts > 0 ? (5 / scoreData.g3Attempts) : 0;
+        const val2 = scoreData.g2Correct / 4;
+        const val3 = scoreData.g3Attempts > 0 ? (4 / scoreData.g3Attempts) : 0;
         
         finalScoreVal = Math.round(((val1 + val2 + val3) / 3) * 100);
 
