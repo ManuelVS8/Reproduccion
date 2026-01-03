@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-    <title>Reproducción de plantas con flor - Proceso vital</title>
+    <title>Reproducción de plantas con flor</title>
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/ManuelVS8/Audios-juegos-SCIENCE/refs/heads/main/icono.ico">
     <style>
         /* ====== Reset & base ====== */
@@ -379,13 +379,14 @@
     <!-- Pantalla de Inicio -->
     <section class="screen active" id="startScreen">
         <header>
-            <h1>Reproducción de las plantas con flor</h1>
-            <div class="subtitle">¿Cómo se reproducen las plantas con flor?</div>
+            <h1>Reproducción de plantas con flor</h1>
+            <div class="subtitle">¿Cómo se reproducen las plantas con?</div>
         </header>
 
         <div class="start-content">
             <div class="advice-box">
-                <span class="advice-text">Estudia el proceso de reproducción de las plantas con flor y descubre cómo el <span class="highlight-keyword">estambre</span>, el <span class="highlight-keyword">polen</span>, el <span class="highlight-keyword">pistilo</span> y los <span class="highlight-keyword">óvulos</span> participan para crear el alimento de las plantas. <strong>¡Ánimo!</strong></span>
+                <span class="advice-text">Estudia el proceso de reproducción de las plantas con flor y descubre cómo el <span class="highlight-keyword">estambre</span>, el <span class="highlight-keyword">polen</span>, el <span class="highlight-keyword">pistilo</span> y los <span class="highlight-keyword">óvulos</span> participan para crear el alimento de las plantas.</span>
+                <strong style="display:block; margin-top:0.5rem; text-align:center;">¡Ánimo!</strong>
             </div>
             
             <button class="btn btn-primary" id="playBtn">Comenzar</button>
@@ -441,7 +442,7 @@
     <!-- Pantalla Juego 1 -->
     <section class="screen" id="game1Screen">
         <header>
-            <h1>La reproducción de plantas con flor</h1>
+            <h1>La fotosíntesis</h1>
             <div class="subtitle">Rellena los huecos para completar el texto</div>
         </header>
         <div class="game-info">
@@ -481,7 +482,7 @@
     <!-- Pantalla Juego 3 -->
     <section class="screen" id="game3Screen">
         <header>
-            <h1>Identifica las fases de la reproducción de plantas con flor</h1>
+            <h1>Identifica las fases de reproducción de plantas con flor</h1>
         </header>
         <div class="game-info">
             <div class="timer" id="timerGame3">00:00.0</div>
@@ -545,10 +546,8 @@
     let finalScoreVal = 0; 
     let finalTimeVal = 0; 
     
-    // ORDEN VARIABLE DE JUEGOS
+    // ORDEN FIJO DE JUEGOS (ESTRICTAMENTE PROHIBIDO CAMBIAR ESTE ORDEN)
     let gameFlowOrder = ['game1', 'game2', 'game3']; 
-    // Shuffle order on load
-    gameFlowOrder.sort(() => Math.random() - 0.5);
     let currentGameStep = 0;
 
     /* --- AUDIOS --- */
@@ -684,6 +683,7 @@
 
     /* --- LÓGICA DE FLUJO DE JUEGOS --- */
     function initGameSequence() {
+        // El orden es FIJO: ['game1', 'game2', 'game3']
         currentGameStep = 0;
         
         scoreData = {
@@ -871,8 +871,6 @@
             }
         });
 
-        // Count empty or incorrect slots as errors towards the 10 total
-        // The formula requires correct / 10. If words remain in bank, they count as incorrect implicitly.
         scoreData.g1Correct = correctCount;
         document.getElementById('checkGame1Btn').classList.add('hidden');
         document.getElementById('continueFromGame1Btn').classList.remove('hidden');
@@ -1097,11 +1095,12 @@
         stopTimerForCheck();
         finalTimeVal = elapsed;
         
-        // Game 1: 10 words total. g1Correct counts correct ones.
-        // Formula: (correct/10) + (correct/4) + (4/attempts)
-        
+        // Cálculo de puntuación según fórmula solicitada
+        // Juego 1: Palabras correctas / 10
         const val1 = scoreData.g1Correct / 10;
+        // Juego 2: Tarjetas correctas / 4
         const val2 = scoreData.g2Correct / 4;
+        // Juego 3: Parejas totales (4) / Intentos
         const val3 = scoreData.g3Attempts > 0 ? (4 / scoreData.g3Attempts) : 0;
         
         finalScoreVal = Math.round(((val1 + val2 + val3) / 3) * 100);
